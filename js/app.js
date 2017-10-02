@@ -1,7 +1,7 @@
 /*
  * Create a list that holds all of your cards
  */
-
+var cards = ['fa fa-diamond', 'fa fa-diamond', "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"];
 
 /*
  * Display the cards on the page
@@ -23,8 +23,16 @@ function shuffle(array) {
     }
 
     return array;
-}
+};
 
+var start = function(){
+  shuffle(cards);
+  for(var i = 0; i < cards.length; i++) {
+    $('.deck').append('<li class="card"><i class="'+cards[i]+'"</i></li>')
+  };
+};
+
+start();
 
 /*
  * set up the event listener for a card. If a card is clicked:
@@ -36,3 +44,62 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+var openCard = function(element){
+  $(element).toggleClass('open show');
+};
+
+var openCards = [];
+
+var addOpenCard = function(element){
+  openCards.push($(element).children().attr('class'));
+};
+
+var cardsMatch = function(){
+  $('.open').toggleClass('match open show');
+  openCards.pop();
+  openCards.pop();
+};
+
+var cardsNotMatch = function(){
+  $('.open').toggleClass('notmatch');
+  setTimeout(function(){
+    $('.open').toggleClass('notmatch open show');
+  }, 1000);
+  openCards.pop();
+  openCards.pop();
+};
+
+var moveCount = function() {
+  var currentValue = parseInt($('.moves').text(),10);
+  var newValue = currentValue + 1;
+  $('.moves').empty();
+  $('.moves').append(newValue);
+};
+
+var winningGame = function() {
+  if ($('.match').length === 16) {
+    alert ("You won the game! Your final score is " + $('.moves').text());
+  };
+};
+
+ $('.deck').on('click', '.card', function(event){
+   openCard(this);
+   addOpenCard(this);
+   if (openCards.length > 1) {
+     if (openCards[0] === openCards[1]){
+       cardsMatch();
+       moveCount();
+       winningGame();
+     } else {
+       cardsNotMatch();
+       moveCount();
+     };
+   };
+ });
+
+ $('.restart').on('click',function(){
+   $('.deck').empty();
+   start();
+   $('.moves').empty();
+   $('.moves').append(0);
+ });
