@@ -28,7 +28,7 @@ function shuffle(array) {
 var start = function(){
   shuffle(cards);
   for(var i = 0; i < cards.length; i++) {
-    $('.deck').append('<li class="card"><i class="'+cards[i]+'"</i></li>')
+    $('.deck').append('<li class="card notopen"><i class="'+cards[i]+'"</i></li>')
   };
 };
 
@@ -45,7 +45,7 @@ start();
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 var openCard = function(element){
-  $(element).toggleClass('open show');
+  $(element).toggleClass('open show notopen');
 };
 
 var openCards = [];
@@ -63,8 +63,8 @@ var cardsMatch = function(){
 var cardsNotMatch = function(){
   $('.open').toggleClass('notmatch');
   setTimeout(function(){
-    $('.open').toggleClass('notmatch open show');
-  }, 1000);
+    $('.open').toggleClass('notmatch open show notopen');
+  }, 500);
   openCards.pop();
   openCards.pop();
 };
@@ -94,11 +94,12 @@ var winningGame = function() {
   };
 };
 
- $('.deck').on('click', '.card', function(event){
+ $('.deck').on('click', '.notopen', function(event){
    openCard(this);
    addOpenCard(this);
    if (openCards.length > 1) {
      if (openCards[0] === openCards[1]){
+       alert('siii');
        cardsMatch();
        moveCount();
        winningGame();
@@ -124,3 +125,27 @@ var winningGame = function() {
      $('#star1').toggleClass('fa fa-star fa fa-star-o');
    }
  });
+
+ /* Timer used from: https://stackoverflow.com/questions/20618355/the-simplest-possible-javascript-countdown-timer */
+ function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.text(minutes + ":" + seconds);
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);
+}
+
+$(function ($) {
+    var fiveMinutes = 60 * 5,
+        display = $('#time');
+    $('#time').append(startTimer(fiveMinutes, display));
+});
