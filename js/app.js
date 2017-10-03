@@ -69,16 +69,28 @@ var cardsNotMatch = function(){
   openCards.pop();
 };
 
+var stars = 3;
+
 var moveCount = function() {
   var currentValue = parseInt($('.moves').text(),10);
   var newValue = currentValue + 1;
   $('.moves').empty();
   $('.moves').append(newValue);
+  if (newValue === 14) {
+    $('#star3').toggleClass('fa fa-star fa fa-star-o');
+    stars = 2;
+  } else if (newValue === 21) {
+    $('#star2').toggleClass('fa fa-star fa fa-star-o');
+    stars = 1;
+  } else if (newValue === 28) {
+    $('#star1').toggleClass('fa fa-star fa fa-star-o');
+    stars = 0;
+  };
 };
 
 var winningGame = function() {
   if ($('.match').length === 16) {
-    alert ("You won the game! Your final score is " + $('.moves').text());
+    alert ("You won the game! Your final score is " + stars + " stars and " + $('.moves').text() + " moves!");
   };
 };
 
