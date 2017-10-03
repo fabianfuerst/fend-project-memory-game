@@ -114,4 +114,13 @@ var winningGame = function() {
    start();
    $('.moves').empty();
    $('.moves').append(0);
+   if($('#star3').attr('class')==='fa fa-star-o') {
+     $('#star3').toggleClass('fa fa-star fa fa-star-o');
+   }
+   if($('#star2').attr('class')==='fa fa-star-o') {
+     $('#star2').toggleClass('fa fa-star fa fa-star-o');
+   }
+   if($('#star1').attr('class')==='fa fa-star-o') {
+     $('#star1').toggleClass('fa fa-star fa fa-star-o');
+   }
  });
