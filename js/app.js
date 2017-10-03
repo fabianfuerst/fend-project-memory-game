@@ -90,7 +90,23 @@ var moveCount = function() {
 
 var winningGame = function() {
   if ($('.match').length === 16) {
-    alert ("You won the game! Your final score is " + stars + " stars and " + $('.moves').text() + " moves!");
+    setTimeout(function(){
+      if (confirm("You won the game! Your final score is " + stars + " stars and " + $('.moves').text() + " moves! You had " + $('#time').text()+' left.') == true) {
+        $('.deck').empty();
+        start();
+        $('.moves').empty();
+        $('.moves').append(0);
+        if($('#star3').attr('class')==='fa fa-star-o') {
+          $('#star3').toggleClass('fa fa-star fa fa-star-o');
+        }
+        if($('#star2').attr('class')==='fa fa-star-o') {
+          $('#star2').toggleClass('fa fa-star fa fa-star-o');
+        }
+        if($('#star1').attr('class')==='fa fa-star-o') {
+          $('#star1').toggleClass('fa fa-star fa fa-star-o');
+        }
+      }
+    }, 1000);
   };
 };
 
@@ -99,7 +115,6 @@ var winningGame = function() {
    addOpenCard(this);
    if (openCards.length > 1) {
      if (openCards[0] === openCards[1]){
-       alert('siii');
        cardsMatch();
        moveCount();
        winningGame();
@@ -115,7 +130,11 @@ var winningGame = function() {
    start();
    $('.moves').empty();
    $('.moves').append(0);
-   if($('#star3').attr('class')==='fa fa-star-o') {
+   $(function ($) {
+       var fiveMinutes = 60 * 5,
+           display = $('#time');
+       startTimer(fiveMinutes, display);
+   });   if($('#star3').attr('class')==='fa fa-star-o') {
      $('#star3').toggleClass('fa fa-star fa fa-star-o');
    }
    if($('#star2').attr('class')==='fa fa-star-o') {
@@ -147,5 +166,5 @@ var winningGame = function() {
 $(function ($) {
     var fiveMinutes = 60 * 5,
         display = $('#time');
-    $('#time').append(startTimer(fiveMinutes, display));
+    startTimer(fiveMinutes, display);
 });
