@@ -160,7 +160,7 @@ var winningGame = function() {
    }
  });
 
- /* Timer reset functionality
+ /* Timer reset functionality*
  function Timer(fn, t) {
      var timerObj = setInterval(fn, t);
 
