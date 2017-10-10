@@ -44,33 +44,49 @@ start();
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+// openCard is triggered when a card is clicked. It toggles the class open and show to make the card visible
 var openCard = function(element){
   $(element).toggleClass('open show notopen');
 };
 
+// The open cards array is used for checking if the open cards are identical and is emptied after the check
 var openCards = [];
 
+
+// adds classes of cards to the open card array
 var addOpenCard = function(element){
   openCards.push($(element).children().attr('class'));
 };
 
+// triggered when the cards match. Changes the class to match and empties the openCards array
 var cardsMatch = function(){
   $('.open').toggleClass('match open show');
   openCards.pop();
   openCards.pop();
 };
 
+
+/* cardsNotMatch is triggered if the two cards don't match. It sets a Timeout to enable the user to see the cards
+and turns off the event listener in the meanwhile. */
+
 var cardsNotMatch = function(){
+  $('.deck').css("pointer-events", "none");
   $('.open').toggleClass('notmatch');
   setTimeout(function(){
     $('.open').toggleClass('notmatch open show notopen');
-  }, 500);
+    $('.deck').css("pointer-events", "auto");
+  }, 1000);
   openCards.pop();
   openCards.pop();
 };
 
+
+// necessary variable to hide stars after a certain moveCount
 var stars = 3;
 
+
+// moveCount counts moves the user makes and hides stars after certain moveCounts
 var moveCount = function() {
   var currentValue = parseInt($('.moves').text(),10);
   var newValue = currentValue + 1;
@@ -88,6 +104,7 @@ var moveCount = function() {
   };
 };
 
+// Triggered when the game is won. If  winnning message is confirmed, game will be restarted
 var winningGame = function() {
   if ($('.match').length === 16) {
     setTimeout(function(){
@@ -110,6 +127,7 @@ var winningGame = function() {
   };
 };
 
+// Event listener for click events on cards
  $('.deck').on('click', '.notopen', function(event){
    openCard(this);
    addOpenCard(this);
@@ -125,16 +143,13 @@ var winningGame = function() {
    };
  });
 
+// Event listener for restart button - restarts the game if clicked
  $('.restart').on('click',function(){
    $('.deck').empty();
    start();
    $('.moves').empty();
    $('.moves').append(0);
-   $(function ($) {
-       var fiveMinutes = 60 * 5,
-           display = $('#time');
-       startTimer(fiveMinutes, display);
-   });   if($('#star3').attr('class')==='fa fa-star-o') {
+   if($('#star3').attr('class')==='fa fa-star-o') {
      $('#star3').toggleClass('fa fa-star fa fa-star-o');
    }
    if($('#star2').attr('class')==='fa fa-star-o') {
@@ -145,23 +160,50 @@ var winningGame = function() {
    }
  });
 
- /* Timer used from: https://stackoverflow.com/questions/20618355/the-simplest-possible-javascript-countdown-timer */
- function startTimer(duration, display) {
-    var timer = duration, minutes, seconds;
-    setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
+ /* Timer reset functionality
+ function Timer(fn, t) {
+     var timerObj = setInterval(fn, t);
 
-        minutes = minutes < 10 ? "0" + minutes : minutes;
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+     this.stop = function(){
+       if(timerObj) {
+         clearInterval(timerObj);
+         timerObj = null;
+       }
+     }
 
-        display.text(minutes + ":" + seconds);
+     //start Timer using current settings (if it's not already running)
+     this.start = function() {
+       if(!timerObj){
+         this.stop();
+         timerObj = setInterval(fn, t);
+       }
+       return this;
+     }
 
-        if (--timer < 0) {
-            timer = duration;
-        }
-    }, 1000);
-}
+     //start with new interval, stop current interval
+     this.reset = function(newT) {
+       t = newT;
+       return this.stop().start();
+     }
+*/
+
+ // Timer used from: https://stackoverflow.com/questions/20618355/the-simplest-possible-javascript-countdown-timer
+   function startTimer(duration, display) {
+      var timer = duration, minutes, seconds;
+      setInterval(function () {
+          minutes = parseInt(timer / 60, 10);
+          seconds = parseInt(timer % 60, 10);
+
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          display.text(minutes + ":" + seconds);
+
+          if (--timer < 0) {
+              timer = duration;
+          }
+      }, 1000);
+  };
 
 $(function ($) {
     var fiveMinutes = 60 * 5,
