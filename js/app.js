@@ -92,21 +92,23 @@ var moveCount = function() {
   var newValue = currentValue + 1;
   $('.moves').empty();
   $('.moves').append(newValue);
-  if (newValue === 14) {
+  if (newValue === 20) {
     $('#star3').toggleClass('fa fa-star fa fa-star-o');
     stars = 2;
-  } else if (newValue === 21) {
+  } else if (newValue === 40) {
     $('#star2').toggleClass('fa fa-star fa fa-star-o');
     stars = 1;
-  } else if (newValue === 28) {
-    $('#star1').toggleClass('fa fa-star fa fa-star-o');
-    stars = 0;
   };
 };
+
+if (moveCount === 1) {
+  gameTimer();
+}
 
 // Triggered when the game is won. If  winnning message is confirmed, game will be restarted
 var winningGame = function() {
   if ($('.match').length === 16) {
+
     setTimeout(function(){
       if (confirm("You won the game! Your final score is " + stars + " stars and " + $('.moves').text() + " moves! You had " + $('#time').text()+' left.') == true) {
         $('.deck').empty();
@@ -160,53 +162,31 @@ var winningGame = function() {
    }
  });
 
- /* Timer reset functionality*
- function Timer(fn, t) {
-     var timerObj = setInterval(fn, t);
+ const gameTimer = () => {
 
-     this.stop = function(){
-       if(timerObj) {
-         clearInterval(timerObj);
-         timerObj = null;
-       }
-     }
+  let startTime = new Date().getTime();
 
-     //start Timer using current settings (if it's not already running)
-     this.start = function() {
-       if(!timerObj){
-         this.stop();
-         timerObj = setInterval(fn, t);
-       }
-       return this;
-     }
+  // Update the timer every second
+  timer = setInterval(function() {
 
-     //start with new interval, stop current interval
-     this.reset = function(newT) {
-       t = newT;
-       return this.stop().start();
-     }
-*/
+    var now = new Date().getTime();
 
- // Timer used from: https://stackoverflow.com/questions/20618355/the-simplest-possible-javascript-countdown-timer
-   function startTimer(duration, display) {
-      var timer = duration, minutes, seconds;
-      setInterval(function () {
-          minutes = parseInt(timer / 60, 10);
-          seconds = parseInt(timer % 60, 10);
+    // Find the time elapsed between now and start
+    var elapsed = now - startTime;
 
-          minutes = minutes < 10 ? "0" + minutes : minutes;
-          seconds = seconds < 10 ? "0" + seconds : seconds;
+    // Calculate minutes and seconds
+    let minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+    let seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
 
-          display.text(minutes + ":" + seconds);
+    // Add starting 0 if seconds < 10
+    if (seconds < 10) {
+      seconds = "0" + seconds;
+    }
 
-          if (--timer < 0) {
-              timer = duration;
-          }
-      }, 1000);
-  };
+    let currentTime = minutes + ':' + seconds;
 
-$(function ($) {
-    var fiveMinutes = 60 * 5,
-        display = $('#time');
-    startTimer(fiveMinutes, display);
-});
+    // Update clock on game screen and modal
+    $(".time").append(currentTime)
+  }, 750);
+
+};
