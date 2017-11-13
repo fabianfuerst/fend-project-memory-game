@@ -1,8 +1,8 @@
 /*
  * Create a list that holds all of your cards
  */
-var cards = ['fa fa-diamond', 'fa fa-diamond', "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"];
-
+const cards = ['fa fa-diamond', 'fa fa-diamond', "fa fa-paper-plane-o", "fa fa-paper-plane-o", "fa fa-anchor", "fa fa-anchor", "fa fa-bolt", "fa fa-bolt", "fa fa-cube", "fa fa-cube", "fa fa-leaf", "fa fa-leaf", "fa fa-bicycle", "fa fa-bicycle", "fa fa-bomb", "fa fa-bomb"];
+let gameStarted = false;
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -48,6 +48,10 @@ start();
 // openCard is triggered when a card is clicked. It toggles the class open and show to make the card visible
 var openCard = function(element){
   $(element).toggleClass('open show notopen');
+  if(!gameStarted) {
+    gameTimer();
+    gameStarted = true;
+  }
 };
 
 // The open cards array is used for checking if the open cards are identical and is emptied after the check
@@ -101,16 +105,12 @@ var moveCount = function() {
   };
 };
 
-if (moveCount === 1) {
-  gameTimer();
-}
-
 // Triggered when the game is won. If  winnning message is confirmed, game will be restarted
 var winningGame = function() {
   if ($('.match').length === 16) {
 
     setTimeout(function(){
-      if (confirm("You won the game! Your final score is " + stars + " stars and " + $('.moves').text() + " moves! You had " + $('#time').text()+' left.') == true) {
+      if (confirm("You won the game! Your final score is " + stars + " stars and " + $('.moves').text() + " moves! You had " + $('.time').text()+' left.') == true) {
         $('.deck').empty();
         start();
         $('.moves').empty();
@@ -124,6 +124,9 @@ var winningGame = function() {
         if($('#star1').attr('class')==='fa fa-star-o') {
           $('#star1').toggleClass('fa fa-star fa fa-star-o');
         }
+        clearInterval(timer);
+        $(".time").text('0:00');
+        gameStarted = false;
       }
     }, 1000);
   };
@@ -160,6 +163,9 @@ var winningGame = function() {
    if($('#star1').attr('class')==='fa fa-star-o') {
      $('#star1').toggleClass('fa fa-star fa fa-star-o');
    }
+   clearInterval(timer);
+   $(".time").text('0:00');
+   gameStarted = false;
  });
 
  const gameTimer = () => {
@@ -186,7 +192,7 @@ var winningGame = function() {
     let currentTime = minutes + ':' + seconds;
 
     // Update clock on game screen and modal
-    $(".time").append(currentTime)
+    $(".time").text(currentTime)
   }, 750);
 
 };
